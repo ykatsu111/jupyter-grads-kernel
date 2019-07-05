@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-m",
+    "jupyter_grads_kernel",
+    "-f",
+    "{connection_file}"
+  ],
+  "display_name": "GrADS",
+  "language": "GrADS"
+}
