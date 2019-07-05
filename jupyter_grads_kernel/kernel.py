@@ -209,7 +209,6 @@ class GradsKernel(Kernel):
         tmpfile = NamedTemporaryFile(suffix=".png", delete=False)
         tmpfile.close()
         try:
-
             self.grads.savefig(tmpfile.name)
             with open(tmpfile.name, "rb") as f:
                 bfig = BytesIO(f.read())
@@ -220,8 +219,6 @@ class GradsKernel(Kernel):
         finally:
             if os.path.exists(tmpfile.name):
                 os.remove(tmpfile.name)
-
-        return
 
     def _send_display(self):
         fig = self._create_jupyter_png()
@@ -241,16 +238,47 @@ class GradsKernel(Kernel):
         )
         return
 
+    def _exe_script(self, s):
+        from tempfile import NamedTemporaryFile
+        import os
+
+        fgs = NamedTemporaryFile(mode="w", suffix=".gs", delete=False)
+        fgs.write(s)
+        fgs.close()
+        self.grads.exec_ga_cmd("run {}".format(fgs.name))
+        os.remove(fgs.name)
+        return
+
     def do_execute(self, code, silent, store_history=True,
                    user_expressions=None, allow_stdin=False):
 
         drawn = False
+        script = False
+        script_s = ""
         for _line in code.split("\n"):
             line = _line.strip()
-            self.grads.exec_ga_cmd(line)
-            if "d " == line[:2] or "display" == line[:7]:
+
+            if line.startswith("*%script"):
+                script = True
+
+            if line.startswith("*%display"):
                 drawn = True
 
+            if script:
+                script_s += line + "\n"
+
+            elif line.startswith("*%display"):
+                pass
+
+            else:
+                self.grads.exec_ga_cmd(line)
+                if "d " == line[:2] or "display" == line[:7]:
+                    drawn = True
+
+        if script:
+            self._exe_script(script_s)
+
+        # else:
         if drawn:
             self._send_display()
 
