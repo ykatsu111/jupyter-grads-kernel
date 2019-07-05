@@ -22,6 +22,10 @@ Steps to install:
 
 Then, a kernel "GrADS" will be seen in your jupyter notebook or lab.
 
+# Demo
+
+You can see an example notebook at [sample.ipynb](sample.ipynb).
+
 # Uninstall
 
 1. `jupyter kernelspec uninstall grads_spec`
