@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='jupyter_grads_kernel',
-      version='0.1.0',
+      version='0.1.1',
       description='GrADS kernel for Jupyter',
       author='ykatsu111',
       url='https://github.com/ykatsu111/jupyter-grads-kernel',

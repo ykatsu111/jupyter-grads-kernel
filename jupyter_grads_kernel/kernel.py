@@ -172,7 +172,7 @@ class RealTimeGrads(Popen):
 
 class GradsKernel(Kernel):
     implementation = 'jupyter_grads_kernel'
-    implementation_version = '0.1'
+    implementation_version = '0.1.1'
     language = 'GrADS'
     language_version = 'GrADS2'
     language_info = {'name': 'grads',
