@@ -268,7 +268,7 @@ class GradsKernel(Kernel):
     @staticmethod
     def _split_magic_line(line):
         m = map(lambda x: x.strip(), line.split(" "))
-        return [x for x in m if len(m) > 0]
+        return [x for x in m if len(x) > 0]
 
     def do_execute(self, code, silent, store_history=True,
                    user_expressions=None, allow_stdin=False):
