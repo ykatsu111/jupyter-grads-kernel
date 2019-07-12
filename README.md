@@ -11,7 +11,7 @@ Make sure you have the following requirements installed:
   * jupyter
   * python 3
   * pip
-  * grads
+  * grads (which must be a command named by 'grads')
 
 Steps to install:
 

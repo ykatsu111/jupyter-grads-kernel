@@ -172,7 +172,7 @@ class RealTimeGrads(Popen):
 
 class GradsKernel(Kernel):
     implementation = 'jupyter_grads_kernel'
-    implementation_version = '0.1.1'
+    implementation_version = '0.1.1b'
     language = 'GrADS'
     language_version = 'GrADS2'
     language_info = {'name': 'grads',
@@ -180,13 +180,15 @@ class GradsKernel(Kernel):
                      'file_extension': 'ga'}
     banner = "GrADS kernel"
 
+    display_data_size_default = (400, 280)
+
     def __init__(self, *args, **kwargs):
         super(GradsKernel, self).__init__(*args, **kwargs)
         self.grads = RealTimeGrads(
             stdout=self._write_to_stdout,
             stderr=self._write_to_stderr
         )
-        self.display_data_size = (400, 280)
+        self.display_data_size = self.display_data_size_default
         return
 
     def _write_to_stdout(self, contents):
@@ -249,6 +251,22 @@ class GradsKernel(Kernel):
         os.remove(fgs.name)
         return
 
+    def set_display_size(self, line):
+        try:
+            m = map(lambda x: x.strip(), line.split(" "))
+            ss = [x for x in m if len(m) > 0]
+            if ss[1] == "default":
+                self.display_data_size = self.display_data_size_default
+            else:
+                x = int(ss[1])
+                y = int(ss[2])
+                self.display_data_size = (x, y)
+
+        except (ValueError, IndexError) as e:
+            self._write_to_stderr("Invalid format for *%display_size")
+        
+        return
+
     def do_execute(self, code, silent, store_history=True,
                    user_expressions=None, allow_stdin=False):
 
@@ -269,6 +287,9 @@ class GradsKernel(Kernel):
 
             elif line.startswith("*%display"):
                 pass
+
+            elif line.startswith("*%display_size"):
+                self.set_display_size(line)
 
             else:
                 self.grads.exec_ga_cmd(line)
