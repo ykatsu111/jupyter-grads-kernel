@@ -251,21 +251,24 @@ class GradsKernel(Kernel):
         os.remove(fgs.name)
         return
 
-    def set_display_size(self, line):
+    def set_display_size(self, cmds):
         try:
-            m = map(lambda x: x.strip(), line.split(" "))
-            ss = [x for x in m if len(m) > 0]
-            if ss[1] == "default":
+            if cmds[1] == "default":
                 self.display_data_size = self.display_data_size_default
             else:
-                x = int(ss[1])
-                y = int(ss[2])
+                x = int(cmds[1])
+                y = int(cmds[2])
                 self.display_data_size = (x, y)
 
         except (ValueError, IndexError) as e:
             self._write_to_stderr("Invalid format for *%display_size")
         
         return
+
+    @staticmethod
+    def _split_magic_line(line):
+        m = map(lambda x: x.strip(), line.split(" "))
+        return [x for x in m if len(m) > 0]
 
     def do_execute(self, code, silent, store_history=True,
                    user_expressions=None, allow_stdin=False):
@@ -276,20 +279,23 @@ class GradsKernel(Kernel):
         for _line in code.split("\n"):
             line = _line.strip()
 
-            if line.startswith("*%script"):
-                script = True
+            if line.startswith("*%"):
+                cmds = self._split_magic_line(line)
 
-            if line.startswith("*%display"):
-                drawn = True
+                if cmds[0] == "*%script":
+                    script = True
+
+                if cmds[0] == "*%display":
+                    drawn = True
+
+                if cmds[0] == "*%display_size":
+                    self.set_display_size(cmds)
 
             if script:
                 script_s += line + "\n"
 
-            elif line.startswith("*%display"):
+            elif line.startswith("*%"):
                 pass
-
-            elif line.startswith("*%display_size"):
-                self.set_display_size(line)
 
             else:
                 self.grads.exec_ga_cmd(line)
