@@ -1,3 +1,6 @@
+# Some parts of this code is based on https://github.com/ZedThree/jupyter-fortran-kernel.
+
+
 from subprocess import Popen
 from ipykernel.kernelbase import Kernel
 
