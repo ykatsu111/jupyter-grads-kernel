@@ -1,7 +1,7 @@
 # GrADS kernel for Jupyter
 
-This software a simple wrapper of GrADS.
-You can execute any GrADS commands of native GrADS on you computer.
+This software is a simple wrapper of GrADS.
+You can execute any GrADS commands on your system.
 
 
 # Installation
@@ -20,7 +20,7 @@ Steps to install:
 3. `cd jupyter-grads-kernel`
 4. `jupyter kernelspec install --user grads_spec`
 
-Then, a kernel "GrADS" will be seen in your jupyter notebook or lab.
+Then, a kernel "GrADS" will be shown in your jupyter notebook or lab.
 
 # Demo
 
